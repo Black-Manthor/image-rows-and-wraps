@@ -1,0 +1,86 @@
+name: Release Obsidian plugin
+
+on:
+    push:
+        tags:
+            - '*'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            id-token: write
+            attestations: write
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Use Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: 'npm'
+
+            - name: Build plugin
+              run: |
+                  npm ci
+                  npm run lint
+                  npm run build
+                  npm test
+
+            - name: Install pinned Gitleaks
+              shell: bash
+              run: |
+                  version="$(node -e "import('./tests/gitleaks-check.mjs').then(m => process.stdout.write(m.GITLEAKS_VERSION))")"
+                  checksum="$(node -e "import('./tests/gitleaks-check.mjs').then(m => process.stdout.write(m.GITLEAKS_LINUX_X64_SHA256))")"
+                  archive="$RUNNER_TEMP/gitleaks.tar.gz"
+                  install_dir="$RUNNER_TEMP/gitleaks-bin"
+                  curl --fail --location --silent --show-error \
+                    "https://github.com/gitleaks/gitleaks/releases/download/v${version}/gitleaks_${version}_linux_x64.tar.gz" \
+                    --output "$archive"
+                  echo "$checksum  $archive" | sha256sum --check --status
+                  mkdir -p "$install_dir"
+                  tar -xzf "$archive" -C "$install_dir" gitleaks
+                  echo "$install_dir" >> "$GITHUB_PATH"
+
+            - name: Scan secrets
+              run: npm run check:secrets
+
+            - name: Check tag matches manifest version
+              env:
+                  RELEASE_TAG: ${{ github.ref_name }}
+              run: |
+                  manifest_version="$(node -p "require('./manifest.json').version")"
+                  if [ "$RELEASE_TAG" != "$manifest_version" ]; then
+                      echo "Release tag '$RELEASE_TAG' does not match manifest version '$manifest_version'." >&2
+                      exit 1
+                  fi
+
+            - name: Check exact release artifacts
+              run: |
+                  for file in main.js manifest.json styles.css; do
+                      test -f "$file" || { echo "Missing release artifact: $file" >&2; exit 1; }
+                  done
+                  test ! -e main.js.map || { echo "Unexpected release artifact: main.js.map" >&2; exit 1; }
+
+            - name: Attest build provenance
+              uses: actions/attest@v4
+              with:
+                  subject-path: |
+                      main.js
+                      manifest.json
+                      styles.css
+
+            - name: Create release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  tag="${GITHUB_REF#refs/tags/}"
+                  artifacts=(main.js manifest.json styles.css)
+
+                  gh release create "$tag" \
+                    --title="$tag" \
+                    --draft \
+                    "${artifacts[@]}"

@@ -1,0 +1,14 @@
+name: Idea
+description: Suggest an improvement or a new feature.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for the idea. You can write in English or Italian.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you would like
+      description: What you want to do, and what gets in the way today.
+    validations:
+      required: true

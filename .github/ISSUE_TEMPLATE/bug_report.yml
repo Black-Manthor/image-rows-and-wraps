@@ -1,0 +1,63 @@
+name: Bug report
+description: Something does not work as described in the README.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting. You can write in English or Italian.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+      description: What you see, and what you expected instead. A screenshot helps.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: If possible, paste the Markdown of a short note that shows the problem.
+      placeholder: |
+        1. Open a note with …
+        2. Click …
+        3. …
+    validations:
+      required: true
+  - type: dropdown
+    id: view
+    attributes:
+      label: Where
+      multiple: true
+      options:
+        - Live Preview
+        - Reading view
+        - PDF export
+        - Settings
+        - Other
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin version
+      description: Settings → Community plugins.
+    validations:
+      required: true
+  - type: input
+    id: obsidian
+    attributes:
+      label: Obsidian version
+      description: Settings → General.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: Windows 11, macOS 15, Ubuntu 24.04 …
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Errors in the console (optional)
+      description: Ctrl+Shift+I (Cmd+Option+I on macOS), Console tab. Paste any red lines.
+      render: text
