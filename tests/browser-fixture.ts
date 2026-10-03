@@ -1,3 +1,4 @@
+import { ownerDocumentRegression, cursorRegression } from './dom-gesture-regression';
 import { defaultSettings, type ImageSettings } from '../src/settings';
 import { history, undo, redo, undoDepth } from '@codemirror/commands';
 import { EditorState, EditorSelection, Compartment, StateEffect, StateField, type Range } from '@codemirror/state';
@@ -103,6 +104,7 @@ registerReadingView(exportPlugin as never, () => exportSettings);
 
 (window as unknown as { fixture: unknown }).fixture = {
 	text,
+	ownerDocumentRegression, cursorRegression,
 	setDoc(doc: string) { view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: doc }, selection: { anchor: 0 } }); },
 	nativeEmbeds(on: boolean) { view.dispatch({ effects: nativeEmbeds.reconfigure(on ? nativeEmbedField : []) }); },
 	strayWrapBar(position: number) {

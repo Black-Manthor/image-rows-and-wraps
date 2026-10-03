@@ -42,7 +42,7 @@ export class WrapWidget extends WidgetType {
 	}
 	toDOM(view: EditorView): HTMLElement {
 		// Not attached yet: made in the editor's own document (pop-out windows).
-		const root = view.dom.doc.createElement('div');
+		const root = windowOf(view.dom).createDiv();
 		root.addClass('iw-preview');
 		// What this DOM shows: replaced in place by updateDOM.
 		const current = { snapshot: this.snapshot, images: parseDocument(this.snapshot.markdown).images, contentOffset: 0 };
@@ -190,7 +190,7 @@ export class MarkerWidget extends WidgetType {
 	constructor(readonly from: number, readonly to: number, private text: string) { super(); }
 	eq(other: MarkerWidget): boolean { return this.to - this.from === other.to - other.from && this.text === other.text; }
 	toDOM(view: EditorView): HTMLElement {
-		const span = view.dom.doc.createElement('span');
+		const span = windowOf(view.dom).createSpan();
 		span.addClass('iw-marker');
 		span.textContent = this.text;
 		previewTargets.set(span, { length: this.to - this.from, fallback: 0 });

@@ -1,7 +1,7 @@
 {
 	"id": "image-rows-and-wraps",
 	"name": "Image Rows and Wraps",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"minAppVersion": "1.13.4",
 	"description": "Arrange images side by side in rows or wrap text around them, with the same layout in Live Preview, Reading view and PDF.",
 	"author": "Black-Manthor",

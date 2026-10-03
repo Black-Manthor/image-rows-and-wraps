@@ -156,7 +156,7 @@ p > .image-embed:is(.iw-left, .iw-right):first-child + br {
 	outline-offset: -3px;
 }
 
-body.iw-drag-forbidden, body.iw-drag-forbidden * { cursor: not-allowed !important; }
+body.iw-gesture.iw-drag-forbidden, body.iw-gesture.iw-drag-forbidden * { cursor: not-allowed; }
 .iw-drop-rejection {
 	position: fixed;
 	left: var(--iw-hint-left);
@@ -251,8 +251,8 @@ p.iw-row.iw-row-valign-bottom { align-items: flex-end; }
 .iw-block-toolbar-button svg { width: 18px; height: 18px; }
 /* The wrap's move handle is dragged, not clicked. */
 .iw-block-toolbar-button.mod-move { cursor: grab; }
-body.iw-block-moving, body.iw-block-moving * { cursor: grabbing !important; }
-body.iw-block-moving.iw-drag-forbidden, body.iw-block-moving.iw-drag-forbidden * { cursor: not-allowed !important; }
+body.iw-gesture.iw-block-moving, body.iw-gesture.iw-block-moving * { cursor: grabbing; }
+body.iw-gesture.iw-block-moving.iw-drag-forbidden, body.iw-gesture.iw-block-moving.iw-drag-forbidden * { cursor: not-allowed; }
 
 /* Resize handles (Live Preview): a thin bar on the moving edge of each image
    of a row, and of the image of a wrap, shown on hover. The gestures are in
@@ -296,8 +296,8 @@ body.iw-block-moving.iw-drag-forbidden, body.iw-block-moving.iw-drag-forbidden *
 .image-embed.iw-resizing > .iw-wrap-handle::after { opacity: 1; }
 /* During a resize the pressed handle alone shows its bar (above); the body
    class gives the cursor everywhere, the pointer leaving the handle. */
-body.iw-row-resizing, body.iw-row-resizing *,
-body.iw-wrap-resizing, body.iw-wrap-resizing * { cursor: ew-resize !important; }
+body.iw-gesture.iw-row-resizing, body.iw-gesture.iw-row-resizing *,
+body.iw-gesture.iw-wrap-resizing, body.iw-gesture.iw-wrap-resizing * { cursor: ew-resize; }
 /* While an image is pressed to be moved, its handles are not an option. */
 body.iw-image-dragging :is(.iw-row-handle, .iw-wrap-handle) { display: none; }
 /* No tooltips during a gesture (pointer-gesture.ts): Obsidian reads

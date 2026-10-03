@@ -35,7 +35,7 @@ export class RowWidget extends WidgetType {
 	}
 	toDOM(view: EditorView): HTMLElement {
 		// Not attached yet: made in the editor's own document (pop-out windows).
-		const root = view.dom.doc.createElement('div');
+		const root = windowOf(view.dom).createDiv();
 		root.addClasses(['iw-preview', 'iw-row-preview']);
 		// Images on the right: the bar goes to the other corner, off them and their handles.
 		if (this.row.settings.align === 'right') root.classList.add('mod-align-right');

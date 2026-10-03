@@ -81,6 +81,27 @@ const expectClasses = async (locator, has = [], not = [], label = '') => {
 };
 
 try {
+ await run('owner-window helpers return detached widget roots and clean the Reading host', async page => {
+  const result = await page.evaluate(() => window.fixture.ownerDocumentRegression());
+  assert.deepEqual(result.created.map(item => item.tag), ['DIV', 'DIV', 'SPAN', 'SPAN', 'DIV']);
+  assert.ok(result.created.every(item => item.owner && item.detached));
+  assert.ok(result.returned.every(item => item.owner && item.detached));
+  assert.equal(result.editorChildren, 0);
+  assert.equal(result.readingOwner, true);
+  assert.equal(result.readingClean, true);
+ });
+ await run('gesture cursor feedback wins competing cursors and cleans release Escape blur and teardown', async page => {
+  const results = await page.evaluate(() => window.fixture.cursorRegression());
+  assert.equal(results.length, 20);
+  for (const result of results) {
+   const cursor = result.state.includes('forbidden') || result.state === 'iw-image-dragging' ? 'not-allowed' : result.state === 'iw-block-moving' ? 'grabbing' : 'ew-resize';
+   assert.deepEqual(result.during, [cursor, cursor], JSON.stringify(result));
+   assert.deepEqual(result.ended, [result.end === 'release'], JSON.stringify(result));
+   assert.deepEqual(result.after, ['grab', 'pointer'], JSON.stringify(result));
+   assert.deepEqual(result.classes, [], JSON.stringify(result));
+   assert.equal(result.overlays, 0, JSON.stringify(result));
+  }
+ });
 	await run('image row renders with its comment settings and releases its preview on source selection', async page => {
 		const source = 'Before\n\n![[a.png|200]] ![[b.png|300]] %%iw-row align=center%%\n\nAfter';
 		await page.evaluate(source => window.fixture.setDoc(source), source);

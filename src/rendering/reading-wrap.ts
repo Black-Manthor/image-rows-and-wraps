@@ -45,7 +45,7 @@ export function ownedWrapRole(model: DocumentModel, lineStart: number, lineEnd: 
 // Draws the wrap after the section's native content, which CSS hides.
 // Returns the cleanup that restores the native section.
 export function renderReadingWrap(element: HTMLElement, wrap: OwnedWrap, app: App, sourcePath: string, parent: Component): () => void {
-	const root = element.doc.createElement('div');
+	const root = windowOf(element).createDiv();
 	root.addClasses(['iw-preview', 'iw-reading-wrap']);
 	root.classList.add(...wrapContainerClasses(wrap.markdown, wrap.side));
 	const content = root.createDiv({ cls: 'iw-preview-content' });
