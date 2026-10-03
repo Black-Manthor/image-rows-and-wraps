@@ -17,7 +17,7 @@ export function windowTeardownError({ event, where = '', stack = '', sinceSecond
 }
 
 /** @param {{ frames?: string[], where?: string, stack?: string, pluginId?: string, bundleUrls?: string[], event?: string, sinceSecondaryClose?: number }} evidence */
-export function consoleSource({ frames = [], where = '', stack = '', pluginId = 'image-flow', bundleUrls = [], event, sinceSecondaryClose }) {
+export function consoleSource({ frames = [], where = '', stack = '', pluginId = 'image-rows-and-wraps', bundleUrls = [], event, sinceSecondaryClose }) {
 	if (frames.some(frame => frame.startsWith('src/'))) return 'plugin';
 	const location = `${where}\n${stack}`;
 	if (bundleUrls.some(url => url && location.includes(url))) return 'plugin';

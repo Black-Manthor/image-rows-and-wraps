@@ -15,7 +15,7 @@ export { record, registryFile };
 export const root = join(process.cwd(), '.obsidian-test');
 export const vault = join(root, 'vault');
 const config = join(root, 'config');
-const pluginId = 'image-flow';
+const pluginId = 'image-rows-and-wraps';
 // With `npm run test:copertura` the app runs a build mapped back to the
 // sources (tests/copertura.mjs makes it), instead of the production one.
 const appBundleDir = coverageDir ? join(coverageDir, 'app') : undefined;

@@ -1,6 +1,6 @@
 {
-	"name": "image-flow",
-	"version": "0.1.0",
+	"name": "image-rows-and-wraps",
+	"version": "0.1.1",
 	"description": "Arrange images side by side in rows or wrap text around them, with the same layout in Live Preview, Reading view and PDF.",
 	"main": "main.js",
 	"type": "module",

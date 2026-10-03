@@ -2,7 +2,7 @@
 
 [English](#english) · [Italiano](#italiano)
 
-![An image row and a wrap in Live Preview](https://raw.githubusercontent.com/Black-Manthor/image-flow/HEAD/assets/readme/panoramica.gif)
+![An image row and a wrap in Live Preview](https://raw.githubusercontent.com/Black-Manthor/image-rows-and-wraps/HEAD/assets/readme/panoramica.gif)
 
 ## English
 
@@ -29,10 +29,30 @@ for «Image Rows and Wraps», **Install**, then **Enable**.
 
 Download `main.js`, `manifest.json` and `styles.css` from the latest release on
 GitHub, put them in the folder
-`<vault>/.obsidian/plugins/image-flow/` and enable the plugin in
+`<vault>/.obsidian/plugins/image-rows-and-wraps/` and enable the plugin in
 **Settings → Community plugins**.
 
 </details>
+
+### Upgrading from 0.1.0
+
+Version 0.1.0 had the ID `image-flow`; from 0.1.1 the ID is
+`image-rows-and-wraps`, because `image-flow` belongs to another plugin in the
+community directory. Obsidian sees the two IDs as two different plugins: move
+by hand, so that only one copy is ever enabled.
+
+1. In **Settings → Community plugins**, disable Image Rows and Wraps.
+2. Install 0.1.1 in `<vault>/.obsidian/plugins/image-rows-and-wraps/`, but do
+   not enable it yet.
+3. To keep your settings, copy `data.json` from
+   `<vault>/.obsidian/plugins/image-flow/` into the new folder.
+4. Delete `<vault>/.obsidian/plugins/image-flow/`, after checking that its
+   `manifest.json` says `"name": "Image Rows and Wraps"`: a folder with that
+   name may also hold the other plugin.
+5. Enable Image Rows and Wraps, and assign again any hotkeys you had set: the
+   commands' IDs now start with `image-rows-and-wraps:`.
+
+Your notes need no change.
 
 ### Image rows
 
@@ -47,7 +67,7 @@ Text before.
 Text after.
 ```
 
-![Reordering an image row by dragging, resizing with the handle, vertical alignment from the bar](https://raw.githubusercontent.com/Black-Manthor/image-flow/HEAD/assets/readme/righe.gif)
+![Reordering an image row by dragging, resizing with the handle, vertical alignment from the bar](https://raw.githubusercontent.com/Black-Manthor/image-rows-and-wraps/HEAD/assets/readme/righe.gif)
 
 - The number in the link is the desired width, in px. Without a number, the
   image's original width is used.
@@ -93,7 +113,7 @@ Text beside the image, which continues below once it is taller than the image.
 [wrap:end]
 ```
 
-![Adding a wrap, changing its side, resizing the image](https://raw.githubusercontent.com/Black-Manthor/image-flow/HEAD/assets/readme/wrap.gif)
+![Adding a wrap, changing its side, resizing the image](https://raw.githubusercontent.com/Black-Manthor/image-rows-and-wraps/HEAD/assets/readme/wrap.gif)
 
 - The image of the wrap goes on the left or on the right (`side=left` or
   `side=right`). The text, lists, quotes, tables and code that follow sit
@@ -145,7 +165,7 @@ pages, unless it is taller than a page. Tools that convert Markdown without
 going through Obsidian (for example those based on Pandoc) do not apply the
 plugin's layout.
 
-![The same note in Reading view and in the exported PDF](https://raw.githubusercontent.com/Black-Manthor/image-flow/HEAD/assets/readme/lettura-pdf.gif)
+![The same note in Reading view and in the exported PDF](https://raw.githubusercontent.com/Black-Manthor/image-rows-and-wraps/HEAD/assets/readme/lettura-pdf.gif)
 
 ### Known limits
 
@@ -164,12 +184,12 @@ plugin's layout.
 ### Reporting a problem
 
 Problems and ideas are welcome as
-[issues on GitHub](https://github.com/Black-Manthor/image-flow/issues).
-To contribute code, see [CONTRIBUTING.md](https://github.com/Black-Manthor/image-flow/blob/HEAD/CONTRIBUTING.md).
+[issues on GitHub](https://github.com/Black-Manthor/image-rows-and-wraps/issues).
+To contribute code, see [CONTRIBUTING.md](https://github.com/Black-Manthor/image-rows-and-wraps/blob/HEAD/CONTRIBUTING.md).
 
 ### License
 
-[MIT](https://github.com/Black-Manthor/image-flow/blob/HEAD/LICENSE) © 2026 Black-Manthor.
+[MIT](https://github.com/Black-Manthor/image-rows-and-wraps/blob/HEAD/LICENSE) © 2026 Black-Manthor.
 
 ## Italiano
 
@@ -196,10 +216,30 @@ Dal catalogo: **Impostazioni → Plugin della comunità → Sfoglia**, cerca
 
 Scarica `main.js`, `manifest.json` e `styles.css` dall'ultima release su
 GitHub, mettili nella cartella
-`<vault>/.obsidian/plugins/image-flow/` e attiva il plugin in
+`<vault>/.obsidian/plugins/image-rows-and-wraps/` e attiva il plugin in
 **Impostazioni → Plugin della comunità**.
 
 </details>
+
+### Aggiornare dalla 0.1.0
+
+La 0.1.0 aveva l'ID `image-flow`; dalla 0.1.1 l'ID è `image-rows-and-wraps`,
+perché `image-flow` appartiene a un altro plugin del catalogo. Per Obsidian i
+due ID sono due plugin diversi: il passaggio si fa a mano, in modo che sia
+sempre attiva una sola copia.
+
+1. In **Impostazioni → Plugin della comunità**, disattiva Image Rows and Wraps.
+2. Installa la 0.1.1 in `<vault>/.obsidian/plugins/image-rows-and-wraps/`, ma
+   non attivarla ancora.
+3. Per conservare le impostazioni, copia `data.json` da
+   `<vault>/.obsidian/plugins/image-flow/` nella nuova cartella.
+4. Cancella `<vault>/.obsidian/plugins/image-flow/`, dopo aver controllato che
+   il suo `manifest.json` dica `"name": "Image Rows and Wraps"`: una cartella
+   con quel nome può contenere anche l'altro plugin.
+5. Attiva Image Rows and Wraps e riassegna le scorciatoie che avevi impostato:
+   gli ID dei comandi ora cominciano con `image-rows-and-wraps:`.
+
+Le note non vanno cambiate.
 
 ### Righe di immagini
 
@@ -215,7 +255,7 @@ Testo prima.
 Testo dopo.
 ```
 
-![Riordinare una riga di immagini trascinando, ridimensionare con la maniglia, allineamento verticale dalla barra](https://raw.githubusercontent.com/Black-Manthor/image-flow/HEAD/assets/readme/righe.gif)
+![Riordinare una riga di immagini trascinando, ridimensionare con la maniglia, allineamento verticale dalla barra](https://raw.githubusercontent.com/Black-Manthor/image-rows-and-wraps/HEAD/assets/readme/righe.gif)
 
 - Il numero nel collegamento è la larghezza desiderata, in px. Senza numero vale
   la larghezza originale dell'immagine.
@@ -264,7 +304,7 @@ Testo accanto all'immagine, che continua sotto quando supera la sua altezza.
 [wrap:end]
 ```
 
-![Aggiungere un wrap, cambiarne il lato, ridimensionare l'immagine](https://raw.githubusercontent.com/Black-Manthor/image-flow/HEAD/assets/readme/wrap.gif)
+![Aggiungere un wrap, cambiarne il lato, ridimensionare l'immagine](https://raw.githubusercontent.com/Black-Manthor/image-rows-and-wraps/HEAD/assets/readme/wrap.gif)
 
 - L'immagine del wrap può essere messa a sinistra o a destra (`side=left` o
   `side=right`). Il testo, gli elenchi, le citazioni, le tabelle e il codice che
@@ -319,7 +359,7 @@ spezzata fra due pagine, salvo che sia più alta della pagina. Gli strumenti che
 convertono il Markdown senza passare da Obsidian (per esempio quelli basati su
 Pandoc) non applicano l'impaginazione definita dal plugin.
 
-![La stessa nota in lettura e nel PDF esportato](https://raw.githubusercontent.com/Black-Manthor/image-flow/HEAD/assets/readme/lettura-pdf.gif)
+![La stessa nota in lettura e nel PDF esportato](https://raw.githubusercontent.com/Black-Manthor/image-rows-and-wraps/HEAD/assets/readme/lettura-pdf.gif)
 
 ### Limiti noti
 
@@ -339,9 +379,9 @@ Pandoc) non applicano l'impaginazione definita dal plugin.
 ### Segnalare un problema
 
 Problemi e idee sono benvenuti come
-[issue su GitHub](https://github.com/Black-Manthor/image-flow/issues).
-Per contribuire al codice, vedi [CONTRIBUTING.md](https://github.com/Black-Manthor/image-flow/blob/HEAD/CONTRIBUTING.md) (in inglese).
+[issue su GitHub](https://github.com/Black-Manthor/image-rows-and-wraps/issues).
+Per contribuire al codice, vedi [CONTRIBUTING.md](https://github.com/Black-Manthor/image-rows-and-wraps/blob/HEAD/CONTRIBUTING.md) (in inglese).
 
 ### Licenza
 
-[MIT](https://github.com/Black-Manthor/image-flow/blob/HEAD/LICENSE) © 2026 Black-Manthor.
+[MIT](https://github.com/Black-Manthor/image-rows-and-wraps/blob/HEAD/LICENSE) © 2026 Black-Manthor.

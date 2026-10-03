@@ -184,7 +184,7 @@ for (const mode of ['live', 'reading']) {
 test('il plugin parla la lingua di Obsidian: qui l’inglese, nei comandi e nel pulsante', async () => {
 	const { page } = obsidian;
 	const seen = await page.evaluate(() => ({ lang: document.documentElement.lang,
-		command: window.app.commands.commands['image-flow:add-wrap']?.name,
+		command: window.app.commands.commands['image-rows-and-wraps:add-wrap']?.name,
 		ribbon: document.querySelector('.side-dock-ribbon-action[aria-label="Image Rows and Wraps"]') !== null }));
 	assert.deepEqual(seen, { lang: 'en', command: 'Image Rows and Wraps: Add wrap', ribbon: true });
 });
@@ -216,11 +216,11 @@ test('Lettura: una riga il cui solo commento è cambiato viene reimpaginata', as
 test('Live Preview: cambiando la distanza predefinita ogni riga viene ridisegnata una volta sola', async () => {
 	const { page } = obsidian;
 	await open('Righe.md', 'live');
-	const previous = await page.evaluate(() => window.app.plugins.plugins['image-flow'].store.current.rowGap);
+	const previous = await page.evaluate(() => window.app.plugins.plugins['image-rows-and-wraps'].store.current.rowGap);
 	let result;
 	try {
 		result = await page.evaluate(async selector => {
-			const store = window.app.plugins.plugins['image-flow'].store;
+			const store = window.app.plugins.plugins['image-rows-and-wraps'].store;
 			const scope = document.querySelector(selector);
 			let created = 0;
 			const observer = new MutationObserver(records => {
@@ -241,7 +241,7 @@ test('Live Preview: cambiando la distanza predefinita ogni riga viene ridisegnat
 		// Prove that the temporary value reached disk before requesting its
 		// restoration; equality with the original file alone could be stale.
 		await page.waitForFunction(async () => {
-			const plugin = window.app.plugins.plugins['image-flow'], store = plugin.store;
+			const plugin = window.app.plugins.plugins['image-rows-and-wraps'], store = plugin.store;
 			return (await plugin.loadData())?.rowGap === 30 && !store.unsaved && store.writing === 0;
 		});
 		assert.equal(result.rows, 2);
@@ -254,12 +254,12 @@ test('Live Preview: cambiando la distanza predefinita ogni riga viene ridisegnat
 		assert.deepEqual(result.gaps, [`${30 / 760 * 100}%`, '0%']);
 	} finally {
 		await page.evaluate(async previous => {
-			const store = window.app.plugins.plugins['image-flow'].store;
+			const store = window.app.plugins.plugins['image-rows-and-wraps'].store;
 			await store.change({ ...store.current, rowGap: previous });
 			store.persist.run();
 		}, previous);
 		await page.waitForFunction(async previous => {
-			const plugin = window.app.plugins.plugins['image-flow'], store = plugin.store;
+			const plugin = window.app.plugins.plugins['image-rows-and-wraps'], store = plugin.store;
 			return (await plugin.loadData())?.rowGap === previous && !store.unsaved && store.writing === 0;
 		}, previous);
 	}
@@ -272,10 +272,10 @@ test('preferenze cambiate fuori da Obsidian (Sync): applicate subito, righe di i
 	// Cross the external-change boundary only after the restored value is both
 	// on disk and free of any local write still queued or in progress.
 	await page.waitForFunction(async () => {
-		const plugin = window.app.plugins.plugins['image-flow'], store = plugin.store;
+		const plugin = window.app.plugins.plugins['image-rows-and-wraps'], store = plugin.store;
 		return (await plugin.loadData())?.rowGap === store.current.rowGap && !store.unsaved && store.writing === 0;
 	});
-	const before = await page.evaluate(() => ({ ...window.app.plugins.plugins['image-flow'].store.current }));
+	const before = await page.evaluate(() => ({ ...window.app.plugins.plugins['image-rows-and-wraps'].store.current }));
 	const externalGap = 31;
 	const gaps = () => page.evaluate(selector => [...document.querySelectorAll(`${selector} .iw-row-preview p.iw-row`)]
 		.map(row => row.style.getPropertyValue('--iw-row-gap')), container('live'));
@@ -284,7 +284,7 @@ test('preferenze cambiate fuori da Obsidian (Sync): applicate subito, righe di i
 	// the plugin's response to that event.
 	try {
 		const applied = await page.evaluate(async ({ before, externalGap }) => {
-			const plugin = window.app.plugins.plugins['image-flow'];
+			const plugin = window.app.plugins.plugins['image-rows-and-wraps'];
 			await plugin.saveData({ ...before, rowGap: externalGap });
 			await plugin.onExternalSettingsChange();
 			return { current: plugin.store.current.rowGap, stored: (await plugin.loadData())?.rowGap,
@@ -292,18 +292,18 @@ test('preferenze cambiate fuori da Obsidian (Sync): applicate subito, righe di i
 		}, { before, externalGap });
 		assert.deepEqual(applied, { current: externalGap, stored: externalGap, unsaved: false, writing: 0 },
 			`la modifica esterna deve essere applicata alla conclusione del callback: ${JSON.stringify(applied)}`);
-		await page.waitForFunction(gap => window.app.plugins.plugins['image-flow'].store.current.rowGap === gap, externalGap, { timeout: 10000 })
+		await page.waitForFunction(gap => window.app.plugins.plugins['image-rows-and-wraps'].store.current.rowGap === gap, externalGap, { timeout: 10000 })
 			.catch(() => assert.fail('data.json cambiato fuori da Obsidian: il plugin non ha riletto le preferenze entro 10 s'));
 		await page.waitForFunction(({ selector, gap }) => document.querySelector(`${selector} .iw-row-preview p.iw-row`)?.style.getPropertyValue('--iw-row-gap') === `${gap / (700 + gap * 2) * 100}%`,
 			{ selector: container('live'), gap: externalGap }, { timeout: 5000 }).catch(async () => assert.fail(`riga di immagini non ridisegnata con la nuova distanza: ${JSON.stringify(await gaps())}`));
 	} finally {
 		await page.evaluate(async before => {
-			const plugin = window.app.plugins.plugins['image-flow'];
+			const plugin = window.app.plugins.plugins['image-rows-and-wraps'];
 			await plugin.saveData(before);
 			await plugin.onExternalSettingsChange();
 		}, before);
 		await page.waitForFunction(async gap => {
-			const plugin = window.app.plugins.plugins['image-flow'], store = plugin.store;
+			const plugin = window.app.plugins.plugins['image-rows-and-wraps'], store = plugin.store;
 			return store.current.rowGap === gap && (await plugin.loadData())?.rowGap === gap && !store.unsaved && store.writing === 0;
 		}, before.rowGap, { timeout: 10000 });
 	}
@@ -317,7 +317,7 @@ test('Correggi il formato dei wrap della nota: più modifiche, un solo passo di 
 	await openNote(page, 'Sistema.md', 'live');
 	const before = await editorText();
 	const expected = 'Prima.\n\n[wrap:start] %%iw-wrap side=left%%\n\n![[a.png|200]]\nTesto accanto.\n\n[wrap:end]\n\nDopo.\n';
-	await page.evaluate(() => window.app.commands.executeCommandById('image-flow:fix-wraps'));
+	await page.evaluate(() => window.app.commands.executeCommandById('image-rows-and-wraps:fix-wraps'));
 	await page.waitForFunction(expected => window.app.workspace.activeEditor.editor.getValue() === expected, expected);
 	assert.equal(await editorText(), expected);
 	await undo();
@@ -331,7 +331,7 @@ test('Annulla: due scelte dalla palette sono due passi, come dalla barra', async
 	const choose = async value => {
 		// The cursor on the first row, then the palette command and its dialog.
 		await page.evaluate(() => window.app.workspace.activeEditor.editor.setCursor(2, 3));
-		await page.evaluate(() => window.app.commands.executeCommandById('image-flow:row-set-gap'));
+		await page.evaluate(() => window.app.commands.executeCommandById('image-rows-and-wraps:row-set-gap'));
 		const input = page.locator('.prompt-input');
 		await input.waitFor();
 		await input.fill(String(value));
@@ -356,7 +356,7 @@ test('una scelta dalla palette non modifica un’altra nota aperta nel frattempo
 	await openNote(page, 'SceltaA.md', 'live');
 	const before = await editorText();
 	await page.evaluate(() => window.app.workspace.activeEditor.editor.setCursor(2, 3));
-	await page.evaluate(() => window.app.commands.executeCommandById('image-flow:row-set-gap'));
+	await page.evaluate(() => window.app.commands.executeCommandById('image-rows-and-wraps:row-set-gap'));
 	const input = page.locator('.prompt-input');
 	await input.waitFor();
 	const editor = await page.evaluateHandle(() => window.app.workspace.activeEditor.editor);
@@ -696,8 +696,8 @@ test('Live Preview: altezze allineate ai numeri di riga dopo ogni azione', async
 		'fuori dalla riga': () => page.evaluate(() => { const e = window.app.workspace.activeEditor.editor; e.setCursor(e.lastLine(), 0); e.scrollIntoView({ from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } }); }),
 		'dentro un wrap': () => page.evaluate(() => window.app.workspace.activeEditor.editor.setCursor(10, 2)),
 		'fuori dal wrap': () => page.evaluate(() => { const e = window.app.workspace.activeEditor.editor; e.setCursor(e.lastLine(), 0); e.scrollIntoView({ from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } }); }),
-		'distanza cambiata': () => page.evaluate(async () => { const store = window.app.plugins.plugins['image-flow'].store; await store.change({ ...store.current, rowGap: 40 }); await new Promise(r => setTimeout(r, 400)); await store.change({ ...store.current, rowGap: 12 }); }),
-		'plugin disattivato e riattivato': () => page.evaluate(async () => { await window.app.plugins.disablePlugin('image-flow'); await window.app.plugins.enablePlugin('image-flow'); }),
+		'distanza cambiata': () => page.evaluate(async () => { const store = window.app.plugins.plugins['image-rows-and-wraps'].store; await store.change({ ...store.current, rowGap: 40 }); await new Promise(r => setTimeout(r, 400)); await store.change({ ...store.current, rowGap: 12 }); }),
+		'plugin disattivato e riattivato': () => page.evaluate(async () => { await window.app.plugins.disablePlugin('image-rows-and-wraps'); await window.app.plugins.enablePlugin('image-rows-and-wraps'); }),
 		};
 		const drift = {};
 		for (const [name, step] of Object.entries(steps)) {
@@ -1280,17 +1280,17 @@ test('stili del plugin: una sola copia dopo ogni ricarica, nessuna a plugin spen
 	const cycles = [];
 	try {
 		for (let i = 0; i < 3; i++) {
-			await page.evaluate(() => window.app.plugins.disablePlugin('image-flow'));
-			await page.waitForFunction(() => !window.app.plugins.plugins['image-flow']
+			await page.evaluate(() => window.app.plugins.disablePlugin('image-rows-and-wraps'));
+			await page.waitForFunction(() => !window.app.plugins.plugins['image-rows-and-wraps']
 				&& [...document.styleSheets].every(sheet => { try { return ![...sheet.cssRules].some(rule => rule.cssText.includes('.iw-row')); } catch { return true; } }));
 			const off = await count();
-			await page.evaluate(() => window.app.plugins.enablePlugin('image-flow'));
-			await page.waitForFunction(() => Boolean(window.app.plugins.plugins['image-flow'])
+			await page.evaluate(() => window.app.plugins.enablePlugin('image-rows-and-wraps'));
+			await page.waitForFunction(() => Boolean(window.app.plugins.plugins['image-rows-and-wraps'])
 				&& [...document.styleSheets].filter(sheet => { try { return [...sheet.cssRules].some(rule => rule.cssText.includes('.iw-row')); } catch { return false; } }).length === 1);
 			cycles.push([off, await count()]);
 		}
 	} finally {
-		await page.evaluate(async () => { if (!window.app.plugins.plugins['image-flow']) await window.app.plugins.enablePlugin('image-flow'); window.dispatchEvent(new FocusEvent('focus')); });
+		await page.evaluate(async () => { if (!window.app.plugins.plugins['image-rows-and-wraps']) await window.app.plugins.enablePlugin('image-rows-and-wraps'); window.dispatchEvent(new FocusEvent('focus')); });
 	}
 	assert.deepEqual(cycles, [[0, 1], [0, 1], [0, 1]]);
 	// And the rows are laid out again after the reloads.
@@ -1302,18 +1302,18 @@ test('una finestra di scelta aperta si chiude quando il plugin viene disattivato
 	await openNote(page, 'Palette.md', 'live');
 	const before = await editorText();
 	await page.evaluate(() => window.app.workspace.activeEditor.editor.setCursor(2, 3));
-	await page.evaluate(() => window.app.commands.executeCommandById('image-flow:row-set-align'));
+	await page.evaluate(() => window.app.commands.executeCommandById('image-rows-and-wraps:row-set-align'));
 	await page.locator('.prompt-input').waitFor();
 	let left;
 	try {
-		await page.evaluate(() => window.app.plugins.disablePlugin('image-flow'));
+		await page.evaluate(() => window.app.plugins.disablePlugin('image-rows-and-wraps'));
 		await page.locator('.prompt-input').waitFor({ state: 'detached' });
 		// Before 0.26.41 the dialog stayed, and a choice made in it still edited the note.
 		left = await page.locator('.prompt-input').count();
 		if (left) await page.keyboard.press('Escape');
 	} finally {
-		await page.evaluate(async () => { if (!window.app.plugins.plugins['image-flow']) await window.app.plugins.enablePlugin('image-flow'); });
-		await page.waitForFunction(() => Boolean(window.app.plugins.plugins['image-flow']));
+		await page.evaluate(async () => { if (!window.app.plugins.plugins['image-rows-and-wraps']) await window.app.plugins.enablePlugin('image-rows-and-wraps'); });
+		await page.waitForFunction(() => Boolean(window.app.plugins.plugins['image-rows-and-wraps']));
 	}
 	assert.equal(left, 0, 'finestra chiusa');
 	assert.equal(await editorText(), before);

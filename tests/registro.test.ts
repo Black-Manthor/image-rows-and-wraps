@@ -123,10 +123,10 @@ test('unreadable registry lines are counted by file and line, the others read', 
 test('console attribution uses structural evidence and never warning text', () => {
 	assert.equal(consoleSource({ frames: ['src/rendering/wrap.ts:2:3'] }), 'plugin');
 	assert.equal(consoleSource({ where: 'app://obsidian.md/main.js', stack: 'at app://obsidian.md/main.js:1:2' }), 'external');
-	assert.equal(consoleSource({ where: '', stack: '', pluginId: 'image-flow' }), 'uncertain');
-	assert.equal(consoleSource({ where: 'app://obsidian.md/main.js', stack: '', pluginId: 'image-flow' }), 'external',
+	assert.equal(consoleSource({ where: '', stack: '', pluginId: 'image-rows-and-wraps' }), 'uncertain');
+	assert.equal(consoleSource({ where: 'app://obsidian.md/main.js', stack: '', pluginId: 'image-rows-and-wraps' }), 'external',
 		'mentioning the plugin only in message text cannot affect this API');
-	assert.equal(consoleSource({ where: 'app://obsidian.md/plugins/image-flow/main.js', pluginId: 'image-flow' }), 'plugin');
+	assert.equal(consoleSource({ where: 'app://obsidian.md/plugins/image-rows-and-wraps/main.js', pluginId: 'image-rows-and-wraps' }), 'plugin');
 });
 
 test('console policy blocks errors and plugin warnings, while external and uncertain warnings remain reviewable', () => {

@@ -140,7 +140,7 @@ To try a production build manually, copy:
 into:
 
 ```text
-<vault>/.obsidian/plugins/image-flow/
+<vault>/.obsidian/plugins/image-rows-and-wraps/
 ```
 
 Then reload Obsidian and enable the plugin.

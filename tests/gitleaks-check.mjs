@@ -36,7 +36,7 @@ export function runGitleaks(mode, target, config, run = spawnSync) {
 		return result('version', `versione Gitleaks diversa da ${GITLEAKS_VERSION}`);
 	}
 
-	const reportDir = mkdtempSync(join(tmpdir(), 'image-flow-gitleaks-'));
+	const reportDir = mkdtempSync(join(tmpdir(), 'image-rows-and-wraps-gitleaks-'));
 	try {
 		const report = join(reportDir, 'report.json');
 		const scan = run('gitleaks', [mode, target, '--config', config, '--redact=100', '--no-banner',
